@@ -1,6 +1,6 @@
 # Intelligent-Robotics
 
-# Assignment 1
+# Assignment_1
 
 // Assignment_1
 
