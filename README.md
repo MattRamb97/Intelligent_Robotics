@@ -28,3 +28,35 @@ The detectCircle function is responsible for identifying circles formed by block
 The laserScanCallback function is called whenever a new LaserScan message is received. It extracts the number of points from the scan data and populates a vector of CartesianPoint objects representing the points in the robot's environment. The points are divided into blocks based on gaps in the data, which helps in processing them more efficiently. For each block with sufficient points, the detectCircle function is called to identify potential obstacles.
 In the main function, the ROS node is initialized, and a subscriber is created to listen for LaserScan messages on the /scan_raw topic. A publisher is also established to send obstacle data using the assignment_1::obstacle_msg message type. The node runs in a loop, periodically publishing the detected obstacle positions while continuously processing incoming messages using ros::spinOnce().
 This code integrates laser scan data processing to detect obstacles in the robot's environment, enabling further navigation and obstacle avoidance strategies for the TIAGO robot.
+
+# Assignment_2
+
+// node_a navigation
+
+As outlined, we have predefined the initial positions for Tiago, the three objects to be manipulated (a blue hexagon, a red cube, and a green triangle), their respective delivery points, and a base position. This base serves as a return point after each object is handled, ensuring Tiago is in the correct position before starting the next task.
+In the main function, the robot receives instructions from a human-controlled node on which object Tiago should search for. The loop runs a maximum of three times, which corresponds to the total number of objects in the environment. For each object ID provided by the human node, the Main function calls the objectPath function, which allows Tiago to complete the assigned task for each object.
+The objectPath function is responsible for guiding Tiago through several steps:
+• Moving towards the object’s location.
+• Detecting the object.
+• Picking up the object.
+• Returning to the base position.
+• Moving to the final delivery point, where Tiago will drop the object.
+This function communicates with two other nodes: one for detecting the object and another for controlling Tiago's arm during the pickup and placement actions. The process for each object is determined by the object’s ID, ensuring Tiago executes the appropriate sequence
+of movements and actions for the given object. Additionally, there are three key auxiliary functions:
+• moveTiago: This function is responsible for moving Tiago to specific coordinates using ROS’s action client for navigation.
+• detectionMessage and placeMessage: Both send messages to confirm when Tiago has successfully detected and place the object.
+
+// node_b detection
+
+In the main function, through the positionTorso function, we adjust Tiago's torso height to a suitable level for picking up objects.
+At this point, using a loop with iterations equal to the number of objects to be picked up, which is three, we position Tiago's head specifically for each of the three objects using the positionHead function. This function repositions Tiago's head based on the object ID, using pre-defined coordinates for each of the three objects.
+Then, we detect all the items near our ID, changing them pose thought the transformPose function that transforms the detected pose of an object from its reference frame to the robot's reference frame, and through a message, we are informed of how many objects are detected near our target ID, and they are saved in an array.
+At this point with the last auxiliary function publishDetectionResult we send to the node_c moving_arm the information about the items.
+
+// node_c moving_arm
+
+The node_c.cpp file is responsible for handling the manipulation of objects in the fetch and delivery task for a Tiago robot using the MoveIt! framework. The node interfaces with the robot’s motion planning system, manipulates objects, and ensures safe grasping and placing of objects in a Gazebo simulation environment. The code operates in two main phases: the picking phase and the placing phase. During the picking phase, objects are detected, added to the planning scene, and picked up using the gripper. In the placing phase, the robot navigates to the correct table and places the object at the designated position.
+During the picking phase, the node listens for messages on the "pick" topic, receiving information about the object ID and AprilTag detections. The detected objects are added to the MoveIt! planning scene as collision objects through the insertCollisionObject helper function, which generates geometric primitives such as cylinders, cones, or cubes to ensure collision-free motion during arm movements. Once the collision objects are set up, the controlArm function is used to plan and execute the arm's movement. This function
+adjusts the arm's pose to reach the object, coordinates its movement for grasping, and calls the attachToGripper helper function to attach the object to the gripper in both the MoveIt! planning scene and the Gazebo simulation environment via the gazebo_ros_link_attacher service.
+After successfully picking up the object, the node moves to the placing phase. Here, the node listens for messages on the "place" topic to determine the delivery location. The setDeliveryLocation function calculates the appropriate position on the table for placing the object based on its ID, setting the exact coordinates of the destination table. The controlArm function is again called to manage the arm's movements as it places the object. At this stage, it uses the detachFromGripper function to detach the object from the gripper and place it at the correct location on the delivery table, ensuring a successful drop-off.
+Throughout the entire process, the node communicates with other nodes by publishing messages on the "move" topic to indicate the progress of the task. It also periodically cleans up the planning scene by removing the collision objects after each pick-and-place operation is completed. The main function continues this process in a loop, repeating the pick-and-place cycle for three objects before shutting down.
