@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  <arg name="name" value="robotics_library"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="w" default="0.0"/>
+  <include file="$(find tiago_iaslab_simulation)/launch/start_simulation.launch">
+    <arg name="world_name" value="$(arg name)"/>
+  </include>
+  <include file="$(find tiago_iaslab_simulation)/launch/navigation.launch">
+  </include>
+    <node name="assignment_1" pkg="assignment_1" type="assignment_1" output="screen" args="$(arg x) $(arg y) $(arg w)"/>
+    <node name="robot" pkg="assignment_1" type="robot" output="screen"/>
+    <node name="scanner" pkg="assignment_1" type="scanner" output="screen"/>
+</launch>
