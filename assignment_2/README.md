@@ -13,9 +13,3 @@ Matteo Rambaldi, matteo.rambaldi@studenti.unipd.it
 - on the second terminal: source devel/setup.bash
 - on cmd1: roslaunch assignment\_2 as2.launch
 - on cmd2 (after Tiago closed its arm): roslaunch assignment\_2 nodes.launch
-
-Link 
-** link bitbucket **
-
-Video 
-** link video **
