@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+    <node name="node_a" pkg="assignment_2" type="node_a" output="screen" />
+    <node name="node_b" pkg="assignment_2" type="node_b" output="screen" />
+    <node name="node_c" pkg="assignment_2" type="node_c" output="screen" />
+</launch>

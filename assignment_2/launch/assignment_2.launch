@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<launch>
+  <arg name="name" value="ias_lab_room_full_tables"/>
+  <include file="$(find tiago_iaslab_simulation)/launch/start_simulation.launch">
+    <arg name="world_name" value="$(arg name)"/>
+  </include>
+  <include file="$(find tiago_iaslab_simulation)/launch/navigation.launch">
+  </include>
+  <include file="$(find tiago_iaslab_simulation)/launch/apriltag.launch">
+  </include>
+    <node name="robot" pkg="assignment_1" type="robot" output="screen"/>
+    <node name="human" pkg="tiago_iaslab_simulation" type="human_node" output="screen"/>
+    <!--<node name="node_a" pkg="as2" type="node_a" output="screen" />-->
+</launch>
