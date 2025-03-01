@@ -1,4 +1,3 @@
-Group xx 
 Amedeo Carraro, amedeo.carraro@studenti.unipd.it 
 Tommaso Bazzan, tommaso.bazzan@studenti.unipd.it 
 Matteo Rambaldi, matteo.rambaldi@studenti.unipd.it
